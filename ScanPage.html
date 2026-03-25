@@ -544,6 +544,13 @@
         window.translations = {"error":{"quotaExceeded":"\u0110\u00e3 v\u01b0\u1ee3t qu\u00e1 dung l\u01b0\u1ee3ng l\u01b0u tr\u1eef. Vui l\u00f2ng gi\u1ea3i ph\u00f3ng b\u1ed9 nh\u1edb v\u00e0 th\u1eed l\u1ea1i.","insufficientMemory":"Kh\u00f4ng \u0111\u1ee7 b\u1ed9 nh\u1edb. Vui l\u00f2ng th\u1eed v\u1edbi \u1ea3nh nh\u1ecf h\u01a1n.","generic":"\u0110\u00e3 x\u1ea3y ra l\u1ed7i: :message","unknown":"L\u1ed7i kh\u00f4ng x\u00e1c \u0111\u1ecbnh","invalidImage":"Vui l\u00f2ng ch\u1ecdn m\u1ed9t file \u1ea3nh h\u1ee3p l\u1ec7.","fileTooLarge":"File qu\u00e1 l\u1edbn. Vui l\u00f2ng ch\u1ecdn \u1ea3nh d\u01b0\u1edbi 50MB.","loadImage":"Kh\u00f4ng th\u1ec3 t\u1ea3i \u1ea3nh. File c\u00f3 th\u1ec3 b\u1ecb h\u1ecfng.","readFile":"Kh\u00f4ng th\u1ec3 \u0111\u1ecdc file.","invalidCrop":"D\u1eef li\u1ec7u c\u1eaft kh\u00f4ng h\u1ee3p l\u1ec7.","cropFailed":"C\u1eaft th\u1ea5t b\u1ea1i. Vui l\u00f2ng th\u1eed \u0111i\u1ec1u ch\u1ec9nh l\u1ea1i c\u00e1c g\u00f3c c\u1eaft."},"pageCounter":{"noPages":"Kh\u00f4ng c\u00f3 trang n\u00e0o"},"paint":{"opacityLabel":"\u0110\u1ed9 m\u1edd (:opacity%)"},"confirm":{"deletePage":"X\u00f3a trang :pageNumber?","clearPaint":"X\u00f3a t\u1ea5t c\u1ea3 c\u00e1c h\u00ecnh v\u1ebd? H\u00e0nh \u0111\u1ed9ng n\u00e0y kh\u00f4ng th\u1ec3 ho\u00e0n t\u00e1c.","goHome":"Quay l\u1ea1i m\u00e0n h\u00ecnh ch\u00ednh? M\u1ecdi c\u00f4ng vi\u1ec7c hi\u1ec7n t\u1ea1i s\u1ebd b\u1ecb m\u1ea5t.","newDocument":"B\u1eaft \u0111\u1ea7u m\u1ed9t t\u00e0i li\u1ec7u m\u1edbi? M\u1ecdi c\u00f4ng vi\u1ec7c hi\u1ec7n t\u1ea1i s\u1ebd b\u1ecb m\u1ea5t."}};
     </script>
     <script src="https://onlinedocscanner.com/js/jspdf.umd.min.js"></script>
+    <script>
+        // Compatibility shim: some scanner builds read `window.jsPDF` directly
+        // while jspdf UMD exposes it as `window.jspdf.jsPDF`.
+        if (typeof window.jsPDF === "undefined" && window.jspdf && window.jspdf.jsPDF) {
+            window.jsPDF = window.jspdf.jsPDF;
+        }
+    </script>
     <script src="https://onlinedocscanner.com/js/Sortable.min.js"></script>
     <script src="https://onlinedocscanner.com/js/webgl-image-filter.js"></script>
     <script src="https://onlinedocscanner.com/js/ScannerEffects.js"></script>
