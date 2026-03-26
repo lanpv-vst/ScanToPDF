@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="vi" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Quét Tài Liệu Online - Chuyển Ảnh sang PDF</title>
+
+    <meta name="description" content="Quét tài liệu trên thiết bị của bạn như máy quét thông thường. Quét, chỉnh sửa và xuất tài liệu dưới dạng PDF, JPG hoặc PNG ngay trên trình duyệt.">
+    <meta name="twitter:title" content="Quét Tài Liệu Online - Chuyển Ảnh sang PDF">
+    <meta name="twitter:description" content="Quét tài liệu trên thiết bị của bạn như máy quét thông thường. Quét, chỉnh sửa và xuất tài liệu dưới dạng PDF, JPG hoặc PNG ngay trên trình duyệt.">
+    <meta name="twitter:url" content="https://onlinedocscanner.com/vi/">
+    <meta name="twitter:image" content="https://onlinedocscanner.com/images/document-scanner.jpg">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://onlinedocscanner.com/vi/">
+    <meta property="og:title" content="Quét Tài Liệu Online - Chuyển Ảnh sang PDF">
+    <meta property="og:description" content="Quét tài liệu trên thiết bị của bạn như máy quét thông thường. Quét, chỉnh sửa và xuất tài liệu dưới dạng PDF, JPG hoặc PNG ngay trên trình duyệt.">
+    <meta property="og:image" content="https://onlinedocscanner.com/images/document-scanner.jpg">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://onlinedocscanner.com/public/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://onlinedocscanner.com/public/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://onlinedocscanner.com/public/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="https://onlinedocscanner.com/public/icons/favicon.ico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="https://onlinedocscanner.com/public/icons/manifest.json">
+    <meta name="theme-color" content="#29aafe">
+    <link rel="stylesheet" href="https://onlinedocscanner.com/css/material-icons.css">
+
+        <link rel="stylesheet" href="https://onlinedocscanner.com/css/common-min.css">
+                <link rel="canonical" href="https://onlinedocscanner.com/vi/">
+    <link rel="alternate" hreflang="x-default" href="https://onlinedocscanner.com/">
+    <link rel="alternate" hreflang="en" href="https://onlinedocscanner.com/">
+    <link rel="alternate" hreflang="hi" href="https://onlinedocscanner.com/hi/">
+    <link rel="alternate" hreflang="id" href="https://onlinedocscanner.com/id/">
+    <link rel="alternate" hreflang="th" href="https://onlinedocscanner.com/th/">
+    <link rel="alternate" hreflang="de" href="https://onlinedocscanner.com/de/">
+    <link rel="alternate" hreflang="it" href="https://onlinedocscanner.com/it/">
+    <link rel="alternate" hreflang="uk" href="https://onlinedocscanner.com/uk/">
+    <link rel="alternate" hreflang="ru" href="https://onlinedocscanner.com/ru/">
+    <link rel="alternate" hreflang="he" href="https://onlinedocscanner.com/he/">
+    <link rel="alternate" hreflang="pl" href="https://onlinedocscanner.com/pl/">
+    <link rel="alternate" hreflang="fr" href="https://onlinedocscanner.com/fr/">
+    <link rel="alternate" hreflang="es" href="https://onlinedocscanner.com/es/">
+    <link rel="alternate" hreflang="pt" href="https://onlinedocscanner.com/pt/">
+    <link rel="alternate" hreflang="vi" href="https://onlinedocscanner.com/vi/">
+    <link rel="alternate" hreflang="tr" href="https://onlinedocscanner.com/tr/">
+    <link rel="alternate" hreflang="nl" href="https://onlinedocscanner.com/nl/">
+    <link rel="alternate" hreflang="ko" href="https://onlinedocscanner.com/ko/">
+    <link rel="alternate" hreflang="ja" href="https://onlinedocscanner.com/ja/">
+    <link rel="alternate" hreflang="ro" href="https://onlinedocscanner.com/ro/">
+    <link rel="alternate" hreflang="cs" href="https://onlinedocscanner.com/cs/">
+
+</head>
+<body data-theme="light">
+<header id="global-header">
+        <div class="header-section header-left">
+            <button id="menu-toggle-btn" class="header-btn">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+        <div class="header-section header-center">
+            <h1>Trình Quét Tài Liệu</h1>
+        </div>
+        <div class="header-section header-right">
+            <div class="dropdown" id="language-dropdown">
+                <button class="header-btn" id="language-btn">
+                    <span class="material-symbols-outlined">language</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-item">
+                    <a href="https://onlinedocscanner.com/">🇺🇸 English</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/hi/">🇮🇳 हिन्दी</a></div>
+                       <div class="dropdown-item"><a href="https://onlinedocscanner.com/id/">🇮🇩 Bahasa Indonesia</a></div>
+                       <div class="dropdown-item"><a href="https://onlinedocscanner.com/th/">🇹🇭 ไทย</a></div>
+                       <div class="dropdown-item"><a href="https://onlinedocscanner.com/de/">🇩🇪 Deutsch</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/it/">🇮🇹 Italiano</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/uk/">🇺🇦 Українська</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/ru/">🇷🇺 Русский</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/he/">🇮🇱 עברית</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/pl/">🇵🇱 Polski</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/fr/">🇫🇷 Français</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/es/">🇪🇸 Español</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/pt/">🇵🇹 Português</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/vi/">🇻🇳 Tiếng Việt</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/tr/">🇹🇷 Türkçe</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/nl/">🇳🇱 Nederlands</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/ko/">🇰🇷 한국어</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/ja/">🇯🇵 日本語</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/ro/">🇷🇴 Română</a></div>
+                        <div class="dropdown-item"><a href="https://onlinedocscanner.com/cs/">🇨🇿 Čeština</a></div>
+                </div>
+            </div>
+            <button id="header-theme-toggle-btn" class="header-btn">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <nav id="mobile-menu">
+        <div class="menu-section">
+            <div class="menu-title">Menu</div>
+            
+        <div class="menu-item"><a href="https://onlinedocscanner.com/vi/"><span class="material-symbols-outlined">scanner</span> Trình Quét Tài Liệu</a></div>
+        <div class="menu-item"><a href="https://onlinedocscanner.com/vi/image-to-text/"><span class="material-symbols-outlined">text_fields</span> Hình ảnh sang Văn bản</a></div>
+        </div>
+    </nav>
+
+    <div class="menu-overlay" id="menu-overlay"></div>
+         <div id="app">
+                <main class="main-content">
+
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-content">
+                <p class="welcome-subtitle">Quét tài liệu chuyên nghiệp, thật đơn giản</p>
+                <div class="upload-options">
+                    <button id="upload-file-btn" class="upload-btn">
+                        <span class="material-symbols-outlined">upload_file</span>
+                        Tải ảnh lên
+                    </button>
+                    <button id="open-camera-btn" class="upload-btn">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                        Dùng máy ảnh
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" class="hidden">
+            <input type="file" id="add-page-input" accept="image/*" class="hidden">
+            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
+        </div>
+
+        <div id="editor-screen" class="screen">
+            <div id="page-thumbnails-container" class="hidden">
+                <div id="page-thumbnails"></div>
+            </div>
+            <div id="main-content">
+                <div id="main-header" class="hidden">
+                    <button id="back-to-welcome-btn" class="toolbar-btn">
+                        <span class="material-symbols-outlined">home</span>
+                    </button>
+                    <div id="page-nav">
+                        <button id="prev-page-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">arrow_back_ios</span>
+                        </button>
+                        <span id="page-counter"></span>
+                        <button id="next-page-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">arrow_forward_ios</span>
+                        </button>
+                    </div>
+                    <button id="theme-toggle-btn" class="toolbar-btn">
+                        <span class="material-symbols-outlined">dark_mode</span>
+                    </button>
+                </div>
+                <div id="canvas-container">
+                    <canvas id="editor-canvas"></canvas>
+                    <canvas id="cropper-overlay"></canvas>
+                    <canvas id="paint-canvas"></canvas>
+                    <div id="preview-magnifier">
+                        <canvas id="preview-canvas" width="120" height="120"></canvas>
+                    </div>
+                </div>
+                <div id="toolbars-container">
+                    <div id="crop-toolbar" class="toolbar hidden">
+                        <button id="crop-cancel-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            <span>Hủy</span>
+                        </button>
+                        <button id="crop-rotate-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">rotate_90_degrees_cw</span>
+                            <span>Xoay</span>
+                        </button>
+                        <button id="crop-reset-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">crop_free</span>
+                            <span>Thiết lập lại</span>
+                        </button>
+                        <div style="flex-grow:1;"></div>
+                        <button id="crop-confirm-btn" class="toolbar-btn">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            <span>Hoàn tất</span>
+                        </button>
+                    </div>
+                    <div id="main-toolbar" class="toolbar hidden">
+                        <button class="toolbar-btn" data-action="new-doc">
+                            <span class="material-symbols-outlined">delete_sweep</span>
+                            <span>Tạo mới</span>
+                        </button>
+                        <button class="toolbar-btn" data-action="add-page">
+                            <span class="material-symbols-outlined">add_photo_alternate</span>
+                            <span>Thêm</span>
+                        </button>
+                        <button class="toolbar-btn" data-action="delete-page">
+                            <span class="material-symbols-outlined">delete</span>
+                            <span>Xóa</span>
+                        </button>
+                        <button class="toolbar-btn" data-action="rotate-page">
+                            <span class="material-symbols-outlined">rotate_90_degrees_cw</span>
+                            <span>Xoay</span>
+                        </button>
+                        <button class="toolbar-btn" data-sub-toolbar="adjust">
+                            <span class="material-symbols-outlined">tune</span>
+                            <span>Điều chỉnh</span>
+                        </button>
+                        <button class="toolbar-btn" data-sub-toolbar="effects">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <span>Hiệu ứng</span>
+                        </button>
+                        <button class="toolbar-btn" data-sub-toolbar="paint">
+                            <span class="material-symbols-outlined">brush</span>
+                            <span>Vẽ</span>
+                        </button>
+                        <button class="toolbar-btn" data-action="setup">
+                            <span class="material-symbols-outlined">settings</span>
+                            <span>Cài đặt</span>
+                        </button>
+                        <button class="toolbar-btn" data-sub-toolbar="download">
+                            <span class="material-symbols-outlined">download</span>
+                            <span>Xuất file</span>
+                        </button>
+                    </div>
+                    <div id="adjust-sub-toolbar" class="sub-toolbar">
+                        <div class="adjust-controls">
+                            <div class="adjust-control" data-adjust="brightness">
+                                <div class="adjust-icon">
+                                    <span class="material-symbols-outlined">brightness_6</span>
+                                    <div class="adjust-value-indicator"></div>
+                                </div>
+                                <div class="adjust-label">Độ sáng</div>
+                            </div>
+                            <div class="adjust-control" data-adjust="contrast">
+                                <div class="adjust-icon">
+                                    <span class="material-symbols-outlined">contrast</span>
+                                    <div class="adjust-value-indicator"></div>
+                                </div>
+                                <div class="adjust-label">Độ tương phản</div>
+                            </div>
+                            <div class="adjust-control" data-adjust="saturate">
+                                <div class="adjust-icon">
+                                    <span class="material-symbols-outlined">palette</span>
+                                    <div class="adjust-value-indicator"></div>
+                                </div>
+                                <div class="adjust-label">Độ bão hòa</div>
+                            </div>
+                        </div>
+                        <div class="adjust-slider-container">
+                            <div class="adjust-slider">
+                                <input type="range" id="brightness-slider" min="50" max="150" value="100">
+                                <input type="range" id="contrast-slider" min="50" max="150" value="100" class="hidden">
+                                <input type="range" id="saturate-slider" min="0" max="200" value="100" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="effects-sub-toolbar" class="sub-toolbar">
+                        <div class="effects-scroll">
+                            <div class="effect-card" data-effect="original">
+                                <div class="effect-preview">
+                                    <canvas class="effect-preview-canvas"></canvas>
+                                </div>
+                                <div class="effect-name">Gốc</div>
+                            </div>
+                            <div class="effect-card" data-effect="superScan">
+                                <div class="effect-preview">
+                                    <canvas class="effect-preview-canvas"></canvas>
+                                </div>
+                                <div class="effect-name">Quét Siêu Nét</div>
+                            </div>
+                            <div class="effect-card" data-effect="better">
+                                <div class="effect-preview">
+                                    <canvas class="effect-preview-canvas"></canvas>
+                                </div>
+                                <div class="effect-name">Cải thiện</div>
+                            </div>
+                            <div class="effect-card" data-effect="simple">
+                                <div class="effect-preview">
+                                    <canvas class="effect-preview-canvas"></canvas>
+                                </div>
+                                <div class="effect-name">Đơn giản</div>
+                            </div>
+                            <div class="effect-card" data-effect="bnw">
+                                <div class="effect-preview">
+                                    <canvas class="effect-preview-canvas"></canvas>
+                                </div>
+                                <div class="effect-name">Trắng đen</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="paint-sub-toolbar" class="sub-toolbar">
+                        <div class="paint-tools">
+                            <div class="paint-tool active" data-tool="pencil">
+                                <div class="paint-tool-icon">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </div>
+                                <div class="paint-tool-label">Bút chì</div>
+                            </div>
+                            <div class="paint-tool" data-tool="highlighter">
+                                <div class="paint-tool-icon">
+                                    <span class="material-symbols-outlined">highlight</span>
+                                </div>
+                                <div class="paint-tool-label">Bút đánh dấu</div>
+                            </div>
+                            <div class="paint-tool" data-tool="eraser">
+                                <div class="paint-tool-icon">
+                                    <span class="material-symbols-outlined">auto_fix_normal</span>
+                                </div>
+                                <div class="paint-tool-label">Cục tẩy</div>
+                            </div>
+                        </div>
+                        <div class="paint-controls">
+                            <div class="paint-colors">
+                                <div class="paint-color red active" data-color="#f44336"></div>
+                                <div class="paint-color blue" data-color="#2196f3"></div>
+                                <div class="paint-color green" data-color="#4caf50"></div>
+                                <div class="paint-color yellow" data-color="#ffeb3b"></div>
+                                <div class="paint-color black" data-color="#424242"></div>
+                            </div>
+                            <div class="paint-brush-size">
+                                <div class="brush-size-label">Kích thước bút</div>
+                                <div class="brush-size-slider">
+                                    <input type="range" id="brush-size-slider" min="2" max="50" value="8">
+                                </div>
+                            </div>
+                            <div class="paint-opacity">
+                                <div class="brush-size-label">Độ mờ (%)</div>
+                                <div class="brush-size-slider">
+                                    <input type="range" id="opacity-slider" min="10" max="100" value="50">
+                                </div>
+                            </div>
+                            <div class="paint-actions">
+                                <button class="paint-action-btn" id="undo-paint-btn">
+                                    <span class="material-symbols-outlined">undo</span>
+                                    <span class="btn-text">Hoàn tác</span>
+                                </button>
+                                <button class="paint-action-btn clear" id="clear-paint-btn">
+                                    <span class="material-symbols-outlined">clear</span>
+                                    <span class="btn-text">Xóa hết</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="download-sub-toolbar" class="sub-toolbar">
+                        <div class="download-grid">
+                            <div class="download-card" data-action="download-jpg">
+                                <span class="material-symbols-outlined download-icon">image</span>
+                                <div class="download-label">JPG</div>
+                                <div class="download-subtitle">Chất lượng cao</div>
+                            </div>
+                            <div class="download-card" data-action="download-png">
+                                <span class="material-symbols-outlined download-icon">photo_library</span>
+                                <div class="download-label">PNG</div>
+                                <div class="download-subtitle">Không giảm chất lượng</div>
+                            </div>
+                            <div class="download-card" data-action="download-pdf">
+                                <span class="material-symbols-outlined download-icon">picture_as_pdf</span>
+                                <div class="download-label">PDF</div>
+                                <div class="download-subtitle">Tài liệu</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="article-section">
+        <div class="article-container">
+            <div class="article-grid">
+                <div class="article-card">
+                    <div class="article-icon"><span class="material-symbols-outlined">palette</span></div>
+                    <p class="article-card-title">Nhiều hiệu ứng</p>
+                    <p>Chọn một bộ lọc để làm cho ảnh của bạn trông như được quét từ máy quét văn phòng thực thụ.</p>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon"><span class="material-symbols-outlined">picture_as_pdf</span>
+                    </div>
+                    <p class="article-card-title">Xuất file dễ dàng</p>
+                    <p>Lưu file dưới dạng JPG, PNG, hoặc PDF với các cài đặt có thể tùy chỉnh.</p>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon"><span class="material-symbols-outlined">devices</span></div>
+                    <p class="article-card-title">Mọi nền tảng</p>
+                    <p>Hoạt động trên hầu hết các thiết bị và trình duyệt. Không cần tải xuống, mọi thứ chạy trực tiếp trên trình duyệt web của bạn.</p>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon"><span class="material-symbols-outlined">security</span></div>
+                    <p class="article-card-title">Ưu tiên bảo mật</p>
+                    <p>Hình ảnh và tài liệu của bạn không bao giờ rời khỏi thiết bị. Điều này đảm bảo sự riêng tư và bảo mật tuyệt đối.</p>
+                </div>
+            </div>
+
+            <article class="how-to-article">
+                <div class="article-intro">
+                    <h2>Cách sử dụng trình quét tài liệu online này?</h2>
+                    <p>Sử dụng công cụ này rất đơn giản. Sau khi bạn tải lên hoặc chụp ảnh bằng máy ảnh, bạn sẽ vào trình chỉnh sửa, nơi bạn có thể sử dụng các tính năng sau:</p>
+                    <ul>
+                        <li><strong>Cắt &amp; Xoay:</strong> Kéo các góc để cắt trang một cách hoàn hảo. Nhấn &quot;Xoay&quot; nếu ảnh bị nghiêng.</li>
+                        <li><strong>Thêm &amp; Sắp xếp trang:</strong> Cần thêm trang? Nhấn &quot;Thêm&quot;, sau đó kéo các ảnh thu nhỏ sang trái hoặc phải để thiết lập thứ tự.</li>
+                        <li><strong>Điều chỉnh &amp; Hiệu ứng:</strong> Tinh chỉnh độ sáng/tương phản để dễ đọc hơn. Sử dụng các bộ lọc một chạm như Quét Siêu Nét để có văn bản sắc nét, hoặc Trắng đen để có giao diện đơn sắc, sạch sẽ.</li>
+                        <li><strong>Chú thích:</strong> Công cụ này cho phép bạn vẽ trên tài liệu của mình. Sử dụng bút chì để thêm ghi chú, bút đánh dấu để tô đậm văn bản quan trọng, hoặc cục tẩy để xóa.</li>
+                        <li><strong>Xuất tài liệu của bạn:</strong> Nhấn nút &quot;Xuất file&quot; để lưu công việc của bạn dưới dạng file JPG, PNG, hoặc PDF chất lượng cao.</li>
+                    </ul>
+
+                    <h2>Trình quét tài liệu PDF là gì?</h2>
+                    <p>Trình quét tài liệu PDF online là một công cụ giúp bạn số hóa các tài liệu hoặc hình ảnh như hóa đơn, ghi chú, hoặc hợp đồng thành các file kỹ thuật số trông giống như được quét từ máy quét vật lý và lưu chúng dưới dạng PDF, JPG, hoặc PNG.</p>
+
+                    <h2>Sử dụng có an toàn không?</h2>
+                    <p>Có. Trình quét của chúng tôi xử lý mọi thứ cục bộ trên thiết bị của bạn, ngay trong trình duyệt web. Tài liệu và hình ảnh của bạn không bao giờ được tải lên máy chủ của chúng tôi hay bất kỳ dịch vụ bên thứ ba nào.</p>
+
+                    <h2>Những thiết bị nào có thể sử dụng trình quét online này?</h2>
+                    <p>Trình quét online của chúng tôi hoạt động trên mọi thiết bị có trình duyệt web hiện đại. Bao gồm:</p>
+                    <ul>
+                        <li><strong>Điện thoại thông minh</strong> (iPhone, Android)</li>
+                        <li><strong>Máy tính bảng</strong> (iPad, máy tính bảng Android)</li>
+                        <li><strong>Máy tính để bàn và Laptop</strong> (Windows, Mac, Linux)</li>
+                    </ul>
+                    <p>Để sử dụng tính năng &quot;Dùng máy ảnh&quot;, thiết bị của bạn phải có camera tích hợp.</p>
+                </div>
+
+                <h2 class="steps-title">Cách Quét Tài Liệu trong 3 Bước Đơn Giản</h2>
+
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Tải tài liệu của bạn lên</h3>
+                            <p class="step-description">
+                                Nhấn &quot;Tải ảnh lên&quot; để chọn ảnh từ thiết bị của bạn, hoặc dùng &quot;Dùng máy ảnh&quot; để chụp ảnh.
+                            </p>
+                        </div>
+                        <div class="step-image">📱 Tải ảnh lên</div>
+                    </div>
+
+                    <p class="text-center">
+                        <img src="https://onlinedocscanner.com/images/scanner-photo.jpg" alt="Upload image or use camera" loading="lazy" width="608" height="646">
+                    </p>
+
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Chỉnh sửa &amp; Xuất file</h3>
+                            <p class="step-description">
+                                Cắt, cải thiện, hoặc chú thích nếu cần, sau đó nhấn &quot;Xuất file&quot; và chọn PDF, JPG hoặc PNG.
+                            </p>
+                        </div>
+                        <div class="step-image step-image-purple">✨ Chỉnh sửa &amp; Lọc</div>
+                    </div>
+
+                    <p class="text-center">
+                        <img src="https://onlinedocscanner.com/images/crop-scanned-document.jpg" alt="Crop scanned document" loading="lazy" width="610" height="1270">
+                    </p>
+
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Tải xuống &amp; Chia sẻ</h3>
+                            <p class="step-description">
+                                Xuất tài liệu đã quét của bạn dưới dạng JPG, PNG, hoặc PDF.
+                            </p>
+                        </div>
+                        <div class="step-image step-image-green">📄 Xuất file PDF</div>
+                    </div>
+
+                    <p class="text-center">
+                        <img src="https://onlinedocscanner.com/images/document-scanner-effects.jpg" alt="Document scanner effects" loading="lazy" width="618" height="1338">
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="page-setup-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cài đặt Trang</h2>
+                <button class="modal-close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="page-layout">Hướng giấy</label>
+                    <select id="page-layout">
+                        <option value="portrait">Dọc</option>
+                        <option value="landscape">Ngang</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="page-size">Khổ giấy</label>
+                    <select id="page-size">
+                        <option value="a4">A4</option>
+                        <option value="letter">Letter</option>
+                        <option value="legal">Legal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 16px;">
+                <label for="page-margins">Lề</label>
+                <select id="page-margins">
+                    <option value="default">Mặc định (10mm)</option>
+                    <option value="none">Không (0mm)</option>
+                    <option value="custom">Tùy chỉnh</option>
+                </select>
+            </div>
+            <div id="custom-margins-group" class="form-grid hidden" style="margin-top: 16px;">
+                <div class="form-group">
+                    <label>Trái (mm)</label>
+                    <input type="number" id="left-margin" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Phải (mm)</label>
+                    <input type="number" id="right-margin" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Trên (mm)</label>
+                    <input type="number" id="top-margin" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Dưới (mm)</label>
+                    <input type="number" id="bottom-margin" value="10">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="setup-cancel-btn" class="modal-btn">Hủy</button>
+                <button id="setup-apply-btn" class="modal-btn">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://onlinedocscanner.com/vi/privacy-policy/" class="footer-link" rel="nofollow">Chính sách Bảo mật và Điều khoản Dịch vụ</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2025 onlinedocscanner.com. Tất cả các quyền được bảo lưu.
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://onlinedocscanner.com/js/common-min.js" defer></script>
+        <script>
+        window.translations = {"error":{"quotaExceeded":"\u0110\u00e3 v\u01b0\u1ee3t qu\u00e1 dung l\u01b0\u1ee3ng l\u01b0u tr\u1eef. Vui l\u00f2ng gi\u1ea3i ph\u00f3ng b\u1ed9 nh\u1edb v\u00e0 th\u1eed l\u1ea1i.","insufficientMemory":"Kh\u00f4ng \u0111\u1ee7 b\u1ed9 nh\u1edb. Vui l\u00f2ng th\u1eed v\u1edbi \u1ea3nh nh\u1ecf h\u01a1n.","generic":"\u0110\u00e3 x\u1ea3y ra l\u1ed7i: :message","unknown":"L\u1ed7i kh\u00f4ng x\u00e1c \u0111\u1ecbnh","invalidImage":"Vui l\u00f2ng ch\u1ecdn m\u1ed9t file \u1ea3nh h\u1ee3p l\u1ec7.","fileTooLarge":"File qu\u00e1 l\u1edbn. Vui l\u00f2ng ch\u1ecdn \u1ea3nh d\u01b0\u1edbi 50MB.","loadImage":"Kh\u00f4ng th\u1ec3 t\u1ea3i \u1ea3nh. File c\u00f3 th\u1ec3 b\u1ecb h\u1ecfng.","readFile":"Kh\u00f4ng th\u1ec3 \u0111\u1ecdc file.","invalidCrop":"D\u1eef li\u1ec7u c\u1eaft kh\u00f4ng h\u1ee3p l\u1ec7.","cropFailed":"C\u1eaft th\u1ea5t b\u1ea1i. Vui l\u00f2ng th\u1eed \u0111i\u1ec1u ch\u1ec9nh l\u1ea1i c\u00e1c g\u00f3c c\u1eaft."},"pageCounter":{"noPages":"Kh\u00f4ng c\u00f3 trang n\u00e0o"},"paint":{"opacityLabel":"\u0110\u1ed9 m\u1edd (:opacity%)"},"confirm":{"deletePage":"X\u00f3a trang :pageNumber?","clearPaint":"X\u00f3a t\u1ea5t c\u1ea3 c\u00e1c h\u00ecnh v\u1ebd? H\u00e0nh \u0111\u1ed9ng n\u00e0y kh\u00f4ng th\u1ec3 ho\u00e0n t\u00e1c.","goHome":"Quay l\u1ea1i m\u00e0n h\u00ecnh ch\u00ednh? M\u1ecdi c\u00f4ng vi\u1ec7c hi\u1ec7n t\u1ea1i s\u1ebd b\u1ecb m\u1ea5t.","newDocument":"B\u1eaft \u0111\u1ea7u m\u1ed9t t\u00e0i li\u1ec7u m\u1edbi? M\u1ecdi c\u00f4ng vi\u1ec7c hi\u1ec7n t\u1ea1i s\u1ebd b\u1ecb m\u1ea5t."}};
+    </script>
+    <script src="https://onlinedocscanner.com/js/jspdf.umd.min.js"></script>
+    <script>
+        // Compatibility shim: some scanner builds read `window.jsPDF` directly
+        // while jspdf UMD exposes it as `window.jspdf.jsPDF`.
+        if (typeof window.jsPDF === "undefined" && window.jspdf && window.jspdf.jsPDF) {
+            window.jsPDF = window.jspdf.jsPDF;
+        }
+    </script>
+    <script src="https://onlinedocscanner.com/js/Sortable.min.js"></script>
+    <script src="https://onlinedocscanner.com/js/webgl-image-filter.js"></script>
+    <script src="https://onlinedocscanner.com/js/ScannerEffects.js"></script>
+    <script src="https://onlinedocscanner.com/js/scanner-min.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"c11869ece9e6409592646c7bbe85268d","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
