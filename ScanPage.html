@@ -12,7 +12,7 @@
       background: #0f172a;
       color: #e2e8f0;
     }
-    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
     h1 { margin: 0 0 12px; font-size: 1.4rem; }
     .panel {
       background: #111827;
@@ -22,7 +22,15 @@
       margin-bottom: 12px;
     }
     .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    button, input[type="file"]::file-selector-button {
+    .row-space { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 145px;
+    }
+    .field label { font-size: 12px; color: #94a3b8; }
+    select, input[type="range"], button, input[type="file"]::file-selector-button {
       border: 1px solid #475569;
       background: #1e293b;
       color: #e2e8f0;
@@ -31,7 +39,8 @@
       cursor: pointer;
       font-size: 14px;
     }
-    button:hover, input[type="file"]::file-selector-button:hover { background: #334155; }
+    input[type="range"] { padding: 0; }
+    button:hover, input[type="file"]::file-selector-button:hover, select:hover { background: #334155; }
     .danger { border-color: #ef4444; color: #fecaca; }
     .ok { border-color: #22c55e; color: #bbf7d0; }
     #pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
@@ -52,7 +61,7 @@
     }
     .thumb-wrap canvas { max-width: 100%; max-height: 100%; }
     .meta { padding: 8px; font-size: 12px; color: #94a3b8; }
-    .actions { display: flex; gap: 6px; padding: 0 8px 8px; }
+    .actions { display: flex; gap: 6px; padding: 0 8px 8px; flex-wrap: wrap; }
     video {
       width: min(100%, 500px);
       border-radius: 8px;
@@ -61,6 +70,31 @@
     }
     .hidden { display: none !important; }
     .muted { color: #94a3b8; font-size: 13px; }
+    #editorWrap { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(300px, 440px); gap: 14px; }
+    #previewCanvas {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border: 1px dashed #475569;
+      border-radius: 8px;
+      background: #020617;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .slider-row { display: grid; grid-template-columns: 100px 1fr 50px; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .slider-row output { text-align: right; color: #93c5fd; font-size: 12px; }
+    .hint {
+      margin: 8px 0;
+      font-size: 12px;
+      color: #93c5fd;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px;
+      background: #0b1220;
+    }
+    @media (max-width: 900px) {
+      #editorWrap { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -81,10 +115,59 @@
     </div>
 
     <div class="panel">
-      <div class="row" style="margin-bottom:8px;">
+      <div class="row-space" style="margin-bottom:8px;">
         <button id="exportPdfBtn" class="ok">Xuất PDF</button>
         <button id="exportJpgBtn">Xuất JPG trang hiện tại</button>
         <button id="exportPngBtn">Xuất PNG trang hiện tại</button>
+        <div class="field">
+          <label for="paperSizeSelect">Khổ giấy PDF</label>
+          <select id="paperSizeSelect">
+            <option value="A4">A4 (210 × 297 mm)</option>
+            <option value="A5">A5 (148 × 210 mm)</option>
+            <option value="LETTER">Letter (8.5 × 11 in)</option>
+            <option value="LEGAL">Legal (8.5 × 14 in)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="orientationSelect">Hướng trang PDF</label>
+          <select id="orientationSelect">
+            <option value="portrait">Dọc (Portrait)</option>
+            <option value="landscape">Ngang (Landscape)</option>
+          </select>
+        </div>
+      </div>
+      <div id="editorWrap" class="hidden">
+        <div>
+          <canvas id="previewCanvas"></canvas>
+          <p id="selectedInfo" class="muted" style="margin-top:6px;"></p>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;">Chỉnh ảnh trang đang chọn</h3>
+          <p class="hint">Cắt ảnh trực tiếp bằng cách kéo các cạnh khung xanh trên ảnh preview.</p>
+          <div class="slider-row">
+            <label for="brightness">Làm sáng (%)</label>
+            <input id="brightness" type="range" min="40" max="180" value="100" />
+            <output id="brightnessVal">100%</output>
+          </div>
+          <div class="slider-row">
+            <label for="contrast">Tương phản (%)</label>
+            <input id="contrast" type="range" min="40" max="220" value="100" />
+            <output id="contrastVal">100%</output>
+          </div>
+          <div class="field" style="margin-bottom:10px;">
+            <label for="filterSelect">Bộ lọc ảnh</label>
+            <select id="filterSelect">
+              <option value="none">Mặc định</option>
+              <option value="grayscale">Đen trắng xám</option>
+              <option value="bw">Tài liệu (đen trắng)</option>
+              <option value="sepia">Sepia</option>
+              <option value="invert">Đảo màu</option>
+            </select>
+          </div>
+          <div class="row">
+            <button id="resetEditBtn">Đặt lại chỉnh sửa</button>
+          </div>
+        </div>
       </div>
       <div id="pages"></div>
       <p id="emptyHint" class="muted">Chưa có trang nào.</p>
@@ -103,10 +186,53 @@
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     const exportJpgBtn = document.getElementById('exportJpgBtn');
     const exportPngBtn = document.getElementById('exportPngBtn');
+    const paperSizeSelect = document.getElementById('paperSizeSelect');
+    const orientationSelect = document.getElementById('orientationSelect');
+    const editorWrap = document.getElementById('editorWrap');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const selectedInfo = document.getElementById('selectedInfo');
+    const resetEditBtn = document.getElementById('resetEditBtn');
+
+    const controls = {
+      brightness: document.getElementById('brightness'),
+      contrast: document.getElementById('contrast'),
+      filter: document.getElementById('filterSelect'),
+    };
+
+    const outputs = {
+      brightness: document.getElementById('brightnessVal'),
+      contrast: document.getElementById('contrastVal'),
+    };
+
+    const previewState = {
+      width: 1,
+      height: 1,
+      activeEdge: null,
+      isDragging: false,
+    };
 
     let stream = null;
     let selectedIndex = -1;
     const pages = [];
+
+    const paperSizesMm = {
+      A4: { w: 210, h: 297 },
+      A5: { w: 148, h: 210 },
+      LETTER: { w: 215.9, h: 279.4 },
+      LEGAL: { w: 215.9, h: 355.6 },
+    };
+
+    function defaultEdits() {
+      return {
+        cropLeft: 0,
+        cropRight: 0,
+        cropTop: 0,
+        cropBottom: 0,
+        brightness: 100,
+        contrast: 100,
+        filter: 'none',
+      };
+    }
 
     function mmToPt(mm) {
       return mm * 72 / 25.4;
@@ -144,9 +270,18 @@
       return out;
     }
 
+    function getPdfDimensionsPt() {
+      const size = paperSizesMm[paperSizeSelect.value] || paperSizesMm.A4;
+      let w = mmToPt(size.w);
+      let h = mmToPt(size.h);
+      if (orientationSelect.value === 'landscape') [w, h] = [h, w];
+      return { w, h };
+    }
+
     function createPdfFromCanvases(canvases) {
-      const a4w = mmToPt(210);
-      const a4h = mmToPt(297);
+      const pageSize = getPdfDimensionsPt();
+      const pageW = pageSize.w;
+      const pageH = pageSize.h;
 
       const objects = new Map();
       let nextId = 3;
@@ -157,11 +292,11 @@
         const iw = canvas.width;
         const ih = canvas.height;
 
-        const scale = Math.min(a4w / iw, a4h / ih);
+        const scale = Math.min(pageW / iw, pageH / ih);
         const drawW = iw * scale;
         const drawH = ih * scale;
-        const x = (a4w - drawW) / 2;
-        const y = (a4h - drawH) / 2;
+        const x = (pageW - drawW) / 2;
+        const y = (pageH - drawH) / 2;
 
         const imgId = nextId++;
         const contentId = nextId++;
@@ -176,7 +311,7 @@
         const contentStream = `q\n${drawW.toFixed(2)} 0 0 ${drawH.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm\n/Im0 Do\nQ`;
         objects.set(contentId, asciiBytes(`<< /Length ${contentStream.length} >>\nstream\n${contentStream}\nendstream`));
 
-        const pageObj = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${a4w.toFixed(2)} ${a4h.toFixed(2)}] /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /Contents ${contentId} 0 R >>`;
+        const pageObj = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW.toFixed(2)} ${pageH.toFixed(2)}] /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /Contents ${contentId} 0 R >>`;
         objects.set(pageId, asciiBytes(pageObj));
         pageRefs.push(`${pageId} 0 R`);
       });
@@ -211,15 +346,98 @@
       return new Blob([concatBytes(parts)], { type: 'application/pdf' });
     }
 
+    function validateCrop(edits) {
+      const maxX = 90;
+      const maxY = 90;
+      if (edits.cropLeft + edits.cropRight > maxX) {
+        const total = edits.cropLeft + edits.cropRight;
+        edits.cropRight = Math.max(0, edits.cropRight - (total - maxX));
+      }
+      if (edits.cropTop + edits.cropBottom > maxY) {
+        const total = edits.cropTop + edits.cropBottom;
+        edits.cropBottom = Math.max(0, edits.cropBottom - (total - maxY));
+      }
+    }
+
+    function applyFilterPixels(imageData, filter) {
+      const d = imageData.data;
+      if (filter === 'none') return;
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i];
+        const g = d[i + 1];
+        const b = d[i + 2];
+
+        if (filter === 'grayscale') {
+          const v = 0.299 * r + 0.587 * g + 0.114 * b;
+          d[i] = d[i + 1] = d[i + 2] = v;
+        } else if (filter === 'bw') {
+          const v = 0.299 * r + 0.587 * g + 0.114 * b;
+          const out = v > 150 ? 255 : 0;
+          d[i] = d[i + 1] = d[i + 2] = out;
+        } else if (filter === 'sepia') {
+          d[i] = Math.min(255, 0.393 * r + 0.769 * g + 0.189 * b);
+          d[i + 1] = Math.min(255, 0.349 * r + 0.686 * g + 0.168 * b);
+          d[i + 2] = Math.min(255, 0.272 * r + 0.534 * g + 0.131 * b);
+        } else if (filter === 'invert') {
+          d[i] = 255 - r;
+          d[i + 1] = 255 - g;
+          d[i + 2] = 255 - b;
+        }
+      }
+    }
+
+    function makeDisplayCanvas(src, edits) {
+      const out = document.createElement('canvas');
+      out.width = src.width;
+      out.height = src.height;
+      const ctx = out.getContext('2d');
+
+      const brightness = edits.brightness / 100;
+      const contrast = edits.contrast / 100;
+      ctx.filter = `brightness(${brightness}) contrast(${contrast})`;
+      ctx.drawImage(src, 0, 0);
+      ctx.filter = 'none';
+
+      if (edits.filter !== 'none') {
+        const imgData = ctx.getImageData(0, 0, out.width, out.height);
+        applyFilterPixels(imgData, edits.filter);
+        ctx.putImageData(imgData, 0, 0);
+      }
+      return out;
+    }
+
+    function makeProcessedCanvas(page) {
+      const src = page.originalCanvas;
+      const edits = { ...page.edits };
+      validateCrop(edits);
+
+      const sx = Math.floor(src.width * (edits.cropLeft / 100));
+      const sy = Math.floor(src.height * (edits.cropTop / 100));
+      const ex = Math.floor(src.width * (edits.cropRight / 100));
+      const ey = Math.floor(src.height * (edits.cropBottom / 100));
+
+      const sw = Math.max(1, src.width - sx - ex);
+      const sh = Math.max(1, src.height - sy - ey);
+
+      const display = makeDisplayCanvas(src, edits);
+      const out = document.createElement('canvas');
+      out.width = sw;
+      out.height = sh;
+      out.getContext('2d').drawImage(display, sx, sy, sw, sh, 0, 0, sw, sh);
+      return out;
+    }
+
     function addImageElement(img, name) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
       ctx.drawImage(img, 0, 0);
-      pages.push({ name, canvas });
+      pages.push({ name, originalCanvas: canvas, edits: defaultEdits() });
       selectedIndex = pages.length - 1;
+      syncControlsFromSelected();
       renderPages();
+      renderPreview();
     }
 
     function addImageFile(file) {
@@ -240,7 +458,7 @@
     }
 
     function rotatePage(index) {
-      const source = pages[index].canvas;
+      const source = pages[index].originalCanvas;
       const out = document.createElement('canvas');
       const ctx = out.getContext('2d');
       out.width = source.height;
@@ -248,25 +466,31 @@
       ctx.translate(out.width / 2, out.height / 2);
       ctx.rotate(Math.PI / 2);
       ctx.drawImage(source, -source.width / 2, -source.height / 2);
-      pages[index].canvas = out;
+      pages[index].originalCanvas = out;
       renderPages();
+      renderPreview();
     }
 
     function removePage(index) {
       pages.splice(index, 1);
       if (pages.length === 0) selectedIndex = -1;
       else selectedIndex = Math.min(index, pages.length - 1);
+      syncControlsFromSelected();
       renderPages();
+      renderPreview();
     }
 
     function selectPage(index) {
       selectedIndex = index;
+      syncControlsFromSelected();
       renderPages();
+      renderPreview();
     }
 
     function renderPages() {
       pagesEl.innerHTML = '';
       emptyHint.classList.toggle('hidden', pages.length > 0);
+      editorWrap.classList.toggle('hidden', selectedIndex < 0);
 
       pages.forEach((p, i) => {
         const card = document.createElement('div');
@@ -276,19 +500,20 @@
         const wrap = document.createElement('div');
         wrap.className = 'thumb-wrap';
 
+        const processed = makeProcessedCanvas(p);
         const thumb = document.createElement('canvas');
         const tctx = thumb.getContext('2d');
         const maxW = 170;
         const maxH = 140;
-        const s = Math.min(maxW / p.canvas.width, maxH / p.canvas.height);
-        thumb.width = Math.max(1, Math.floor(p.canvas.width * s));
-        thumb.height = Math.max(1, Math.floor(p.canvas.height * s));
-        tctx.drawImage(p.canvas, 0, 0, thumb.width, thumb.height);
+        const s = Math.min(maxW / processed.width, maxH / processed.height);
+        thumb.width = Math.max(1, Math.floor(processed.width * s));
+        thumb.height = Math.max(1, Math.floor(processed.height * s));
+        tctx.drawImage(processed, 0, 0, thumb.width, thumb.height);
         wrap.appendChild(thumb);
 
         const meta = document.createElement('div');
         meta.className = 'meta';
-        meta.textContent = `Trang ${i + 1} • ${p.canvas.width}×${p.canvas.height}`;
+        meta.textContent = `Trang ${i + 1} • ${processed.width}×${processed.height}`;
 
         const actions = document.createElement('div');
         actions.className = 'actions';
@@ -310,6 +535,141 @@
         card.append(wrap, meta, actions);
         pagesEl.appendChild(card);
       });
+    }
+
+    function syncControlsFromSelected() {
+      if (selectedIndex < 0 || !pages[selectedIndex]) return;
+      const edits = pages[selectedIndex].edits;
+      controls.brightness.value = edits.brightness;
+      controls.contrast.value = edits.contrast;
+      controls.filter.value = edits.filter;
+      updateControlOutputs();
+    }
+
+    function updateControlOutputs() {
+      outputs.brightness.textContent = `${controls.brightness.value}%`;
+      outputs.contrast.textContent = `${controls.contrast.value}%`;
+    }
+
+    function updateSelectedEditsFromControls() {
+      if (selectedIndex < 0 || !pages[selectedIndex]) return;
+      const edits = pages[selectedIndex].edits;
+      edits.brightness = Number(controls.brightness.value);
+      edits.contrast = Number(controls.contrast.value);
+      edits.filter = controls.filter.value;
+      renderPages();
+      renderPreview();
+    }
+
+    function getCropRectPx(edits, width, height) {
+      const x = (edits.cropLeft / 100) * width;
+      const y = (edits.cropTop / 100) * height;
+      const w = width - ((edits.cropLeft + edits.cropRight) / 100) * width;
+      const h = height - ((edits.cropTop + edits.cropBottom) / 100) * height;
+      return { x, y, w: Math.max(1, w), h: Math.max(1, h) };
+    }
+
+    function detectEdge(x, y, rect) {
+      const threshold = 12;
+      const nearLeft = Math.abs(x - rect.x) <= threshold && y >= rect.y - threshold && y <= rect.y + rect.h + threshold;
+      const nearRight = Math.abs(x - (rect.x + rect.w)) <= threshold && y >= rect.y - threshold && y <= rect.y + rect.h + threshold;
+      const nearTop = Math.abs(y - rect.y) <= threshold && x >= rect.x - threshold && x <= rect.x + rect.w + threshold;
+      const nearBottom = Math.abs(y - (rect.y + rect.h)) <= threshold && x >= rect.x - threshold && x <= rect.x + rect.w + threshold;
+
+      if (nearLeft) return 'left';
+      if (nearRight) return 'right';
+      if (nearTop) return 'top';
+      if (nearBottom) return 'bottom';
+      return null;
+    }
+
+    function clamp(val, min, max) {
+      return Math.min(max, Math.max(min, val));
+    }
+
+    function applyCropDrag(edge, x, y) {
+      const p = pages[selectedIndex];
+      if (!p) return;
+      const edits = p.edits;
+      const w = previewState.width;
+      const h = previewState.height;
+
+      if (edge === 'left') {
+        edits.cropLeft = clamp((x / w) * 100, 0, 90 - edits.cropRight);
+      } else if (edge === 'right') {
+        edits.cropRight = clamp(((w - x) / w) * 100, 0, 90 - edits.cropLeft);
+      } else if (edge === 'top') {
+        edits.cropTop = clamp((y / h) * 100, 0, 90 - edits.cropBottom);
+      } else if (edge === 'bottom') {
+        edits.cropBottom = clamp(((h - y) / h) * 100, 0, 90 - edits.cropTop);
+      }
+
+      validateCrop(edits);
+      renderPages();
+      renderPreview();
+    }
+
+    function getCanvasPoint(event) {
+      const rect = previewCanvas.getBoundingClientRect();
+      const x = (event.clientX - rect.left) * (previewCanvas.width / rect.width);
+      const y = (event.clientY - rect.top) * (previewCanvas.height / rect.height);
+      return { x, y };
+    }
+
+    function updateCursorFromPoint(x, y) {
+      const p = pages[selectedIndex];
+      if (!p) return;
+      const rect = getCropRectPx(p.edits, previewState.width, previewState.height);
+      const edge = detectEdge(x, y, rect);
+      previewCanvas.style.cursor = edge === 'left' || edge === 'right' ? 'ew-resize' : edge === 'top' || edge === 'bottom' ? 'ns-resize' : 'crosshair';
+    }
+
+    function renderPreview() {
+      const p = pages[selectedIndex];
+      if (!p) {
+        const ctx = previewCanvas.getContext('2d');
+        previewCanvas.width = 1;
+        previewCanvas.height = 1;
+        ctx.clearRect(0, 0, 1, 1);
+        selectedInfo.textContent = '';
+        return;
+      }
+
+      const display = makeDisplayCanvas(p.originalCanvas, p.edits);
+      const maxW = 820;
+      const maxH = 420;
+      const scale = Math.min(maxW / display.width, maxH / display.height, 1);
+      previewCanvas.width = Math.max(1, Math.floor(display.width * scale));
+      previewCanvas.height = Math.max(1, Math.floor(display.height * scale));
+      previewState.width = previewCanvas.width;
+      previewState.height = previewCanvas.height;
+
+      const ctx = previewCanvas.getContext('2d');
+      ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+      ctx.drawImage(display, 0, 0, previewCanvas.width, previewCanvas.height);
+
+      const cropRect = getCropRectPx(p.edits, previewCanvas.width, previewCanvas.height);
+      ctx.save();
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.55)';
+      ctx.fillRect(0, 0, previewCanvas.width, cropRect.y);
+      ctx.fillRect(0, cropRect.y + cropRect.h, previewCanvas.width, previewCanvas.height - cropRect.y - cropRect.h);
+      ctx.fillRect(0, cropRect.y, cropRect.x, cropRect.h);
+      ctx.fillRect(cropRect.x + cropRect.w, cropRect.y, previewCanvas.width - cropRect.x - cropRect.w, cropRect.h);
+
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(cropRect.x, cropRect.y, cropRect.w, cropRect.h);
+
+      ctx.fillStyle = '#22c55e';
+      const handle = 8;
+      ctx.fillRect(cropRect.x - handle / 2, cropRect.y + cropRect.h / 2 - handle / 2, handle, handle);
+      ctx.fillRect(cropRect.x + cropRect.w - handle / 2, cropRect.y + cropRect.h / 2 - handle / 2, handle, handle);
+      ctx.fillRect(cropRect.x + cropRect.w / 2 - handle / 2, cropRect.y - handle / 2, handle, handle);
+      ctx.fillRect(cropRect.x + cropRect.w / 2 - handle / 2, cropRect.y + cropRect.h - handle / 2, handle, handle);
+      ctx.restore();
+
+      const processed = makeProcessedCanvas(p);
+      selectedInfo.textContent = `${p.name} • Kích thước sau xử lý: ${processed.width} × ${processed.height} • Cắt: trái ${p.edits.cropLeft.toFixed(1)}%, phải ${p.edits.cropRight.toFixed(1)}%, trên ${p.edits.cropTop.toFixed(1)}%, dưới ${p.edits.cropBottom.toFixed(1)}%`;
     }
 
     async function openCamera() {
@@ -341,9 +701,11 @@
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       canvas.getContext('2d').drawImage(video, 0, 0);
-      pages.push({ name: `camera-${pages.length + 1}.jpg`, canvas });
+      pages.push({ name: `camera-${pages.length + 1}.jpg`, originalCanvas: canvas, edits: defaultEdits() });
       selectedIndex = pages.length - 1;
+      syncControlsFromSelected();
       renderPages();
+      renderPreview();
     }
 
     uploadInput.addEventListener('change', async (e) => {
@@ -369,27 +731,83 @@
     closeCamBtn.addEventListener('click', closeCamera);
     captureBtn.addEventListener('click', captureFrame);
 
+    for (const ctl of [controls.brightness, controls.contrast]) {
+      ctl.addEventListener('input', () => {
+        updateControlOutputs();
+        updateSelectedEditsFromControls();
+      });
+    }
+    controls.filter.addEventListener('change', updateSelectedEditsFromControls);
+
+    previewCanvas.addEventListener('pointerdown', (event) => {
+      if (selectedIndex < 0 || !pages[selectedIndex]) return;
+      const point = getCanvasPoint(event);
+      const rect = getCropRectPx(pages[selectedIndex].edits, previewState.width, previewState.height);
+      const edge = detectEdge(point.x, point.y, rect);
+      if (!edge) return;
+
+      previewState.activeEdge = edge;
+      previewState.isDragging = true;
+      previewCanvas.setPointerCapture(event.pointerId);
+      applyCropDrag(edge, point.x, point.y);
+    });
+
+    previewCanvas.addEventListener('pointermove', (event) => {
+      if (selectedIndex < 0 || !pages[selectedIndex]) return;
+      const point = getCanvasPoint(event);
+      if (!previewState.isDragging || !previewState.activeEdge) {
+        updateCursorFromPoint(point.x, point.y);
+        return;
+      }
+      applyCropDrag(previewState.activeEdge, point.x, point.y);
+    });
+
+    previewCanvas.addEventListener('pointerup', (event) => {
+      if (previewState.isDragging) {
+        previewCanvas.releasePointerCapture(event.pointerId);
+      }
+      previewState.activeEdge = null;
+      previewState.isDragging = false;
+      previewCanvas.style.cursor = 'crosshair';
+    });
+
+    previewCanvas.addEventListener('pointerleave', () => {
+      if (!previewState.isDragging) previewCanvas.style.cursor = 'crosshair';
+    });
+
+    resetEditBtn.addEventListener('click', () => {
+      if (selectedIndex < 0 || !pages[selectedIndex]) return;
+      pages[selectedIndex].edits = defaultEdits();
+      syncControlsFromSelected();
+      renderPages();
+      renderPreview();
+    });
+
     exportPdfBtn.addEventListener('click', () => {
       if (!pages.length) return alert('Chưa có trang để xuất PDF.');
-      const blob = createPdfFromCanvases(pages.map((p) => p.canvas));
+      const processedPages = pages.map((p) => makeProcessedCanvas(p));
+      const blob = createPdfFromCanvases(processedPages);
       downloadBlob(blob, `scan-${Date.now()}.pdf`);
     });
 
     exportJpgBtn.addEventListener('click', () => {
       if (selectedIndex < 0) return alert('Hãy chọn 1 trang trước.');
-      pages[selectedIndex].canvas.toBlob((blob) => {
+      const out = makeProcessedCanvas(pages[selectedIndex]);
+      out.toBlob((blob) => {
         if (blob) downloadBlob(blob, `page-${selectedIndex + 1}.jpg`);
       }, 'image/jpeg', 0.95);
     });
 
     exportPngBtn.addEventListener('click', () => {
       if (selectedIndex < 0) return alert('Hãy chọn 1 trang trước.');
-      pages[selectedIndex].canvas.toBlob((blob) => {
+      const out = makeProcessedCanvas(pages[selectedIndex]);
+      out.toBlob((blob) => {
         if (blob) downloadBlob(blob, `page-${selectedIndex + 1}.png`);
       }, 'image/png');
     });
 
     window.addEventListener('beforeunload', closeCamera);
+    updateControlOutputs();
   </script>
 </body>
 </html>
