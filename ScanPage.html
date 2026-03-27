@@ -53,14 +53,13 @@
 
     <div class="panel">
       <div class="row-space" style="margin-bottom:8px;">
-        <button id="exportPdfBtn" class="ok">Xuất PDF</button>
-        <button id="exportJpgBtn">Xuất JPG trang hiện tại</button>
-        <button id="exportPngBtn">Xuất PNG trang hiện tại</button>
-        <button id="clearAllBtn" class="danger">Xóa toàn bộ ảnh</button>
         <div class="field">
           <label for="filenameInput">Tên file xuất</label>
           <input id="filenameInput" type="text" value="scan-document" placeholder="Ví dụ: ho-so-2026" />
         </div>
+        <button id="exportPdfBtn" class="ok">Xuất PDF</button>
+        <button id="exportJpgBtn">Xuất JPG trang hiện tại</button>
+        <button id="exportPngBtn">Xuất PNG trang hiện tại</button>
         <div class="field">
           <label for="paperSizeSelect">Khổ giấy PDF</label>
           <select id="paperSizeSelect">
@@ -87,8 +86,9 @@
           <div class="slider-row"><label for="brightness">Làm sáng (%)</label><input id="brightness" type="range" min="40" max="180" value="100" /><output id="brightnessVal">100%</output></div>
           <div class="slider-row"><label for="contrast">Tương phản (%)</label><input id="contrast" type="range" min="40" max="220" value="100" /><output id="contrastVal">100%</output></div>
           <div class="field" style="margin-bottom:10px;"><label for="filterSelect">Bộ lọc ảnh</label><select id="filterSelect"><option value="none">Mặc định</option><option value="grayscale">Đen trắng xám</option><option value="bw">Tài liệu (đen trắng)</option><option value="sepia">Sepia</option><option value="invert">Đảo màu</option></select></div>
+          <label class="row" style="font-size:13px; margin-bottom:10px;"><input id="applyAllToggle" type="checkbox" /> Áp dụng làm sáng/tương phản/bộ lọc cho toàn bộ ảnh</label>
           <label class="row" style="font-size:13px; margin-bottom:10px;"><input id="perspectiveToggle" type="checkbox" checked /> Làm phẳng phối cảnh / vuông vức giấy</label>
-          <div class="row"><button id="resetPolyBtn">Reset vùng cắt</button><button id="resetEditBtn">Đặt lại chỉnh sửa</button></div>
+          <div class="row"><button id="resetPolyBtn">Reset vùng cắt</button><button id="resetEditBtn">Đặt lại chỉnh sửa</button><button id="clearAllBtn" class="danger">Xóa toàn bộ ảnh</button></div>
         </div>
       </div>
 
@@ -125,6 +125,7 @@
       brightness: document.getElementById('brightness'),
       contrast: document.getElementById('contrast'),
       filter: document.getElementById('filterSelect'),
+      applyAll: document.getElementById('applyAllToggle'),
       perspective: document.getElementById('perspectiveToggle'),
     };
     const outputs = { brightness: document.getElementById('brightnessVal'), contrast: document.getElementById('contrastVal') };
@@ -451,13 +452,22 @@
 
     function updateSelectedEditsFromControls() {
       if (selectedIndex < 0 || !pages[selectedIndex]) return;
-      const page = pages[selectedIndex];
-      const e = page.edits;
-      e.brightness = Number(controls.brightness.value);
-      e.contrast = Number(controls.contrast.value);
-      e.filter = controls.filter.value;
-      e.perspective = controls.perspective.checked;
-      invalidateCache(page, true);
+      const selectedPage = pages[selectedIndex];
+      const brightness = Number(controls.brightness.value);
+      const contrast = Number(controls.contrast.value);
+      const filter = controls.filter.value;
+      const perspective = controls.perspective.checked;
+      const applyAll = controls.applyAll.checked;
+
+      const targets = applyAll ? pages : [selectedPage];
+      targets.forEach((page) => {
+        page.edits.brightness = brightness;
+        page.edits.contrast = contrast;
+        page.edits.filter = filter;
+        if (page === selectedPage) page.edits.perspective = perspective;
+        invalidateCache(page, true);
+      });
+
       schedulePreviewRender(true);
     }
 
