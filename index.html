@@ -38,7 +38,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>📄 Scan to PDF</h1>
+    <div class="row-space" style="margin-bottom:12px; align-items:center;">
+      <h1 style="margin:0;">📄 Scan to PDF</h1>
+      <a href="compress.html" style="text-decoration:none;"><button type="button">Nén PDF</button></a>
+    </div>
 
     <div class="panel">
       <div class="row">
@@ -88,7 +91,7 @@
           <div class="field" style="margin-bottom:10px;"><label for="filterSelect">Bộ lọc ảnh</label><select id="filterSelect"><option value="none">Mặc định</option><option value="grayscale">Đen trắng xám</option><option value="bw">Tài liệu (đen trắng)</option><option value="sepia">Sepia</option><option value="invert">Đảo màu</option></select></div>
           <label class="row" style="font-size:13px; margin-bottom:10px;"><input id="applyAllToggle" type="checkbox" /> Áp dụng làm sáng/tương phản/bộ lọc cho toàn bộ ảnh</label>
           <label class="row" style="font-size:13px; margin-bottom:10px;"><input id="perspectiveToggle" type="checkbox" checked /> Làm phẳng phối cảnh / vuông vức giấy</label>
-          <div class="row"><button id="resetPolyBtn">Reset vùng cắt</button><button id="resetEditBtn">Đặt lại chỉnh sửa</button><button id="clearAllBtn" class="danger">Xóa toàn bộ ảnh</button></div>
+          <div class="row"><button id="autoDetectBtn">Tự bắt góc</button><button id="resetPolyBtn">Reset vùng cắt</button><button id="resetEditBtn">Đặt lại chỉnh sửa</button><button id="clearAllBtn" class="danger">Xóa toàn bộ ảnh</button></div>
         </div>
       </div>
 
@@ -120,6 +123,7 @@
     const selectedInfo = document.getElementById('selectedInfo');
     const resetEditBtn = document.getElementById('resetEditBtn');
     const resetPolyBtn = document.getElementById('resetPolyBtn');
+    const autoDetectBtn = document.getElementById('autoDetectBtn');
 
     const controls = {
       brightness: document.getElementById('brightness'),
@@ -159,6 +163,160 @@
       out.height = Math.max(1, Math.round(source.height * scale));
       out.getContext('2d').drawImage(source, 0, 0, out.width, out.height);
       return out;
+    }
+
+    function detectDocumentPolygon(sourceCanvas) {
+      const maxAnalyzeDim = 900;
+      const analysis = downscaleCanvas(sourceCanvas, maxAnalyzeDim);
+      const w = analysis.width;
+      const h = analysis.height;
+      if (w < 80 || h < 80) return defaultPolygon();
+
+      const ctx = analysis.getContext('2d', { willReadFrequently: true });
+      const img = ctx.getImageData(0, 0, w, h);
+      const data = img.data;
+      const gray = new Float32Array(w * h);
+      for (let i = 0, p = 0; i < data.length; i += 4, p++) gray[p] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+
+      function getCornersFromPoints(points) {
+        if (!points.length) return null;
+        let tl = points[0], tr = points[0], br = points[0], bl = points[0];
+        for (const p of points) {
+          if (p.x + p.y < tl.x + tl.y) tl = p;
+          if (p.x - p.y > tr.x - tr.y) tr = p;
+          if (p.x + p.y > br.x + br.y) br = p;
+          if (p.x - p.y < bl.x - bl.y) bl = p;
+        }
+        const ordered = [tl, tr, br, bl];
+        const area = Math.abs(
+          ordered[0].x * ordered[1].y - ordered[1].x * ordered[0].y +
+          ordered[1].x * ordered[2].y - ordered[2].x * ordered[1].y +
+          ordered[2].x * ordered[3].y - ordered[3].x * ordered[2].y +
+          ordered[3].x * ordered[0].y - ordered[0].x * ordered[3].y
+        ) / 2;
+        return { ordered, area };
+      }
+
+      function detectByBackgroundContrast() {
+        const borderSamples = [];
+        const sampleStep = Math.max(1, Math.round(Math.min(w, h) / 120));
+        for (let x = 0; x < w; x += sampleStep) {
+          borderSamples.push([data[(x * 4)], data[(x * 4) + 1], data[(x * 4) + 2]]);
+          const b = ((h - 1) * w + x) * 4;
+          borderSamples.push([data[b], data[b + 1], data[b + 2]]);
+        }
+        for (let y = 0; y < h; y += sampleStep) {
+          const l = (y * w) * 4;
+          const r = (y * w + (w - 1)) * 4;
+          borderSamples.push([data[l], data[l + 1], data[l + 2]]);
+          borderSamples.push([data[r], data[r + 1], data[r + 2]]);
+        }
+        if (!borderSamples.length) return null;
+
+        const mean = [0, 0, 0];
+        for (const c of borderSamples) { mean[0] += c[0]; mean[1] += c[1]; mean[2] += c[2]; }
+        mean[0] /= borderSamples.length; mean[1] /= borderSamples.length; mean[2] /= borderSamples.length;
+
+        const distances = [];
+        for (const c of borderSamples) distances.push(Math.hypot(c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]));
+        distances.sort((a, b) => a - b);
+        const spread = distances[Math.floor(distances.length * 0.9)] || 0;
+        const threshold = Math.max(22, spread * 2.4);
+
+        const fg = [];
+        const margin = Math.round(Math.min(w, h) * 0.02);
+        for (let y = margin; y < h - margin; y++) {
+          for (let x = margin; x < w - margin; x++) {
+            const i = (y * w + x) * 4;
+            const dr = data[i] - mean[0];
+            const dg = data[i + 1] - mean[1];
+            const db = data[i + 2] - mean[2];
+            if (Math.hypot(dr, dg, db) >= threshold) fg.push({ x, y });
+          }
+        }
+
+        if (fg.length < w * h * 0.03) return null;
+        const corners = getCornersFromPoints(fg);
+        if (!corners) return null;
+        if (corners.area < w * h * 0.1) return null;
+        return corners.ordered;
+      }
+
+      const blur = new Float32Array(gray.length);
+      const kernel = [1, 2, 1];
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          let sum = 0, weight = 0;
+          for (let k = -1; k <= 1; k++) {
+            const xx = clamp(x + k, 0, w - 1);
+            const kv = kernel[k + 1];
+            sum += gray[y * w + xx] * kv;
+            weight += kv;
+          }
+          blur[y * w + x] = sum / weight;
+        }
+      }
+
+      const blur2 = new Float32Array(gray.length);
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          let sum = 0, weight = 0;
+          for (let k = -1; k <= 1; k++) {
+            const yy = clamp(y + k, 0, h - 1);
+            const kv = kernel[k + 1];
+            sum += blur[yy * w + x] * kv;
+            weight += kv;
+          }
+          blur2[y * w + x] = sum / weight;
+        }
+      }
+
+      const mags = [];
+      const edgePoints = [];
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const i = y * w + x;
+          const gx = -blur2[i - w - 1] - 2 * blur2[i - 1] - blur2[i + w - 1] + blur2[i - w + 1] + 2 * blur2[i + 1] + blur2[i + w + 1];
+          const gy = -blur2[i - w - 1] - 2 * blur2[i - w] - blur2[i - w + 1] + blur2[i + w - 1] + 2 * blur2[i + w] + blur2[i + w + 1];
+          const mag = Math.hypot(gx, gy);
+          mags.push(mag);
+        }
+      }
+
+      if (!mags.length) return defaultPolygon();
+      mags.sort((a, b) => a - b);
+      const percentile = mags[Math.floor(mags.length * 0.86)] || 0;
+      const edgeThreshold = Math.max(18, percentile);
+      const margin = Math.round(Math.min(w, h) * 0.02);
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          if (x < margin || x > w - margin || y < margin || y > h - margin) continue;
+          const i = y * w + x;
+          const gx = -blur2[i - w - 1] - 2 * blur2[i - 1] - blur2[i + w - 1] + blur2[i - w + 1] + 2 * blur2[i + 1] + blur2[i + w + 1];
+          const gy = -blur2[i - w - 1] - 2 * blur2[i - w] - blur2[i - w + 1] + blur2[i + w - 1] + 2 * blur2[i + w] + blur2[i + w + 1];
+          if (Math.hypot(gx, gy) >= edgeThreshold) edgePoints.push({ x, y });
+        }
+      }
+
+      const colorQuad = detectByBackgroundContrast();
+      if (colorQuad) return colorQuad.map((p) => ({ x: clamp(p.x / w, 0, 1), y: clamp(p.y / h, 0, 1) }));
+
+      if (edgePoints.length < 120) return defaultPolygon();
+      const centerX = w / 2;
+      const centerY = h / 2;
+      edgePoints.sort((a, b) => {
+        const da = Math.hypot(a.x - centerX, a.y - centerY);
+        const db = Math.hypot(b.x - centerX, b.y - centerY);
+        return db - da;
+      });
+      const topPoints = edgePoints.slice(0, Math.max(200, Math.floor(edgePoints.length * 0.35)));
+      const corners = getCornersFromPoints(topPoints);
+      if (!corners) return defaultPolygon();
+      const { ordered, area } = corners;
+      const minArea = w * h * 0.12;
+      if (!Number.isFinite(area) || area < minArea) return defaultPolygon();
+
+      return ordered.map((p) => ({ x: clamp(p.x / w, 0, 1), y: clamp(p.y / h, 0, 1) }));
     }
 
     function downloadBlob(blob, filename) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1500); }
@@ -345,7 +503,9 @@
       canvas.height = img.naturalHeight;
       canvas.getContext('2d').drawImage(img, 0, 0);
       const workingCanvas = downscaleCanvas(canvas, MAX_WORK_DIM);
-      pages.push({ name, originalCanvas: workingCanvas, edits: defaultEdits(), cache: createCache() });
+      const edits = defaultEdits();
+      edits.polygon = detectDocumentPolygon(workingCanvas);
+      pages.push({ name, originalCanvas: workingCanvas, edits, cache: createCache() });
       selectedIndex = pages.length - 1;
       syncControlsFromSelected();
       renderPages();
@@ -377,7 +537,7 @@
       ctx.rotate(Math.PI / 2);
       ctx.drawImage(source, -source.width / 2, -source.height / 2);
       page.originalCanvas = out;
-      page.edits.polygon = defaultPolygon();
+      page.edits.polygon = detectDocumentPolygon(out);
       invalidateCache(page, true);
       renderPages();
       schedulePreviewRender(true);
@@ -543,7 +703,9 @@
       if (!video.videoWidth || !video.videoHeight) return;
       const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; canvas.getContext('2d').drawImage(video, 0, 0);
       const workingCanvas = downscaleCanvas(canvas, MAX_WORK_DIM);
-      pages.push({ name: `camera-${pages.length + 1}.jpg`, originalCanvas: workingCanvas, edits: defaultEdits(), cache: createCache() });
+      const edits = defaultEdits();
+      edits.polygon = detectDocumentPolygon(workingCanvas);
+      pages.push({ name: `camera-${pages.length + 1}.jpg`, originalCanvas: workingCanvas, edits, cache: createCache() });
       selectedIndex = pages.length - 1;
       syncControlsFromSelected(); renderPages(); schedulePreviewRender(true);
     }
@@ -616,6 +778,14 @@
       const p = pages[selectedIndex];
       if (!p) return;
       p.edits.polygon = defaultPolygon();
+      invalidateCache(p, false);
+      schedulePreviewRender(true);
+    });
+
+    autoDetectBtn.addEventListener('click', () => {
+      const p = pages[selectedIndex];
+      if (!p) return;
+      p.edits.polygon = detectDocumentPolygon(p.originalCanvas);
       invalidateCache(p, false);
       schedulePreviewRender(true);
     });
