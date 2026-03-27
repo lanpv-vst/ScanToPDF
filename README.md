@@ -34,12 +34,14 @@ Sau đó mở: `http://localhost:8080`
 - **Nén PDF** (`compress.html`):
   - Chọn file PDF và mức nén (cao/cân bằng/chất lượng cao).
   - App render lại từng trang và đóng gói PDF mới để giảm dung lượng.
+  - Trang nén dùng PDF.js từ CDN, cần có internet để tải thư viện.
 
 ## Lưu ý
 
 - Ảnh lớn được tự giảm kích thước xử lý (max cạnh dài ~2200px) để thao tác mượt hơn.
 - Tất cả xử lý diễn ra cục bộ trên trình duyệt; không cần upload ảnh lên server.
 - Auto-detect là heuristic: trong một số ảnh phức tạp, bạn nên kéo tay 4 góc để có kết quả tốt nhất.
+- Nếu mở trực tiếp file `compress.html` và bị lỗi tải thư viện, hãy chạy qua local server (`python3 -m http.server 8080`) rồi mở bằng `http://localhost:8080`.
 
 ## Cấu trúc dự án
 

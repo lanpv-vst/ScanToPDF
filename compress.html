@@ -45,11 +45,7 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.js"></script>
   <script>
-    if (!window.pdfjsLib) alert('Không tải được thư viện PDF.js. Vui lòng kiểm tra internet và thử lại.');
-    if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
-
     const pdfInput = document.getElementById('pdfInput');
     const levelSelect = document.getElementById('levelSelect');
     const compressBtn = document.getElementById('compressBtn');
@@ -58,6 +54,51 @@
     const progressBar = document.getElementById('progressBar');
 
     let selectedFile = null;
+    let pdfJsReady = false;
+
+    async function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    async function ensurePdfJs() {
+      if (window.pdfjsLib) return true;
+      const cdnList = [
+        {
+          lib: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.js',
+          worker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js',
+        },
+        {
+          lib: 'https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.min.mjs',
+          worker: 'https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs',
+          esm: true,
+        },
+      ];
+
+      for (const item of cdnList) {
+        try {
+          if (item.esm) {
+            const mod = await import(item.lib);
+            window.pdfjsLib = mod;
+          } else {
+            await loadScript(item.lib);
+          }
+          if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = item.worker;
+            return true;
+          }
+        } catch (err) {
+          console.warn('Load PDF.js failed from', item.lib, err);
+        }
+      }
+      return false;
+    }
 
     function formatBytes(bytes) {
       if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -184,7 +225,14 @@
     });
 
     compressBtn.addEventListener('click', async () => {
-      if (!window.pdfjsLib) return alert('Thiếu thư viện PDF.js. Không thể nén PDF.');
+      if (!pdfJsReady) {
+        const readyNow = await ensurePdfJs();
+        pdfJsReady = readyNow;
+      }
+      if (!pdfJsReady) {
+        statusText.textContent = 'Không tải được PDF.js. Hãy kiểm tra mạng hoặc mở qua http://localhost.';
+        return alert('Không tải được thư viện PDF.js. Vui lòng bật internet hoặc chạy trang qua local server.');
+      }
       if (!selectedFile) return alert('Vui lòng chọn file PDF trước.');
       compressBtn.disabled = true;
       try {
@@ -208,6 +256,16 @@
         compressBtn.disabled = false;
       }
     });
+
+    (async () => {
+      statusText.textContent = 'Đang tải công cụ nén PDF...';
+      pdfJsReady = await ensurePdfJs();
+      if (pdfJsReady) {
+        statusText.textContent = 'Sẵn sàng.';
+      } else {
+        statusText.textContent = 'Không tải được PDF.js. Nếu mở file trực tiếp, hãy thử chạy local server: python3 -m http.server 8080';
+      }
+    })();
   </script>
 </body>
 </html>
