@@ -14,7 +14,7 @@
     .row-space { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
     .field { display: flex; flex-direction: column; gap: 4px; min-width: 145px; }
     .field label { font-size: 12px; color: #94a3b8; }
-    select, input[type="range"], button, input[type="file"]::file-selector-button { border: 1px solid #475569; background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 14px; }
+    select, input[type="range"], input[type="text"], button, input[type="file"]::file-selector-button { border: 1px solid #475569; background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 14px; }
     input[type="range"] { padding: 0; }
     button:hover, input[type="file"]::file-selector-button:hover, select:hover { background: #334155; }
     .danger { border-color: #ef4444; color: #fecaca; }
@@ -56,6 +56,11 @@
         <button id="exportPdfBtn" class="ok">Xuất PDF</button>
         <button id="exportJpgBtn">Xuất JPG trang hiện tại</button>
         <button id="exportPngBtn">Xuất PNG trang hiện tại</button>
+        <button id="clearAllBtn" class="danger">Xóa toàn bộ ảnh</button>
+        <div class="field">
+          <label for="filenameInput">Tên file xuất</label>
+          <input id="filenameInput" type="text" value="scan-document" placeholder="Ví dụ: ho-so-2026" />
+        </div>
         <div class="field">
           <label for="paperSizeSelect">Khổ giấy PDF</label>
           <select id="paperSizeSelect">
@@ -106,6 +111,8 @@
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     const exportJpgBtn = document.getElementById('exportJpgBtn');
     const exportPngBtn = document.getElementById('exportPngBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const filenameInput = document.getElementById('filenameInput');
     const paperSizeSelect = document.getElementById('paperSizeSelect');
     const orientationSelect = document.getElementById('orientationSelect');
     const editorWrap = document.getElementById('editorWrap');
@@ -154,6 +161,11 @@
     }
 
     function downloadBlob(blob, filename) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1500); }
+    function getBaseFilename() {
+      const raw = (filenameInput.value || '').trim();
+      const cleaned = raw.replace(/[<>:\"/\\\\|?*\\x00-\\x1F]/g, '-').replace(/\\s+/g, '-').replace(/-+/g, '-').replace(/^[-.]+|[-.]+$/g, '');
+      return cleaned || 'scan-document';
+    }
     function dataUrlToBytes(dataUrl) { const b64 = dataUrl.split(',')[1]; const bin = atob(b64); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return bytes; }
     function asciiBytes(str) { return new TextEncoder().encode(str); }
     function concatBytes(parts) { const len = parts.reduce((n, p) => n + p.length, 0); const out = new Uint8Array(len); let off = 0; for (const p of parts) { out.set(p, off); off += p.length; } return out; }
@@ -378,6 +390,14 @@
       schedulePreviewRender(true);
     }
 
+    function clearAllPages() {
+      if (!pages.length) return;
+      pages.length = 0;
+      selectedIndex = -1;
+      renderPages();
+      schedulePreviewRender(true);
+    }
+
     function movePage(index, direction) {
       const next = index + direction;
       if (next < 0 || next >= pages.length) return;
@@ -528,6 +548,10 @@
     openCamBtn.addEventListener('click', async () => { try { await openCamera(); } catch { alert('Không mở được camera.'); } });
     closeCamBtn.addEventListener('click', closeCamera);
     captureBtn.addEventListener('click', captureFrame);
+    clearAllBtn.addEventListener('click', () => {
+      if (!pages.length) return;
+      if (confirm('Xóa toàn bộ ảnh đã thêm?')) clearAllPages();
+    });
 
     for (const ctl of [controls.brightness, controls.contrast]) {
       ctl.addEventListener('input', () => { updateControlOutputs(); updateSelectedEditsFromControls(); });
@@ -598,17 +622,17 @@
     exportPdfBtn.addEventListener('click', () => {
       if (!pages.length) return alert('Chưa có trang để xuất PDF.');
       const processedPages = pages.map((p) => makeProcessedCanvas(p, false));
-      downloadBlob(createPdfFromCanvases(processedPages), `scan-${Date.now()}.pdf`);
+      downloadBlob(createPdfFromCanvases(processedPages), `${getBaseFilename()}.pdf`);
     });
 
     exportJpgBtn.addEventListener('click', () => {
       if (selectedIndex < 0) return alert('Hãy chọn 1 trang trước.');
-      makeProcessedCanvas(pages[selectedIndex], false).toBlob((blob) => { if (blob) downloadBlob(blob, `page-${selectedIndex + 1}.jpg`); }, 'image/jpeg', 0.95);
+      makeProcessedCanvas(pages[selectedIndex], false).toBlob((blob) => { if (blob) downloadBlob(blob, `${getBaseFilename()}-page-${selectedIndex + 1}.jpg`); }, 'image/jpeg', 0.95);
     });
 
     exportPngBtn.addEventListener('click', () => {
       if (selectedIndex < 0) return alert('Hãy chọn 1 trang trước.');
-      makeProcessedCanvas(pages[selectedIndex], false).toBlob((blob) => { if (blob) downloadBlob(blob, `page-${selectedIndex + 1}.png`); }, 'image/png');
+      makeProcessedCanvas(pages[selectedIndex], false).toBlob((blob) => { if (blob) downloadBlob(blob, `${getBaseFilename()}-page-${selectedIndex + 1}.png`); }, 'image/png');
     });
 
     window.addEventListener('beforeunload', closeCamera);
